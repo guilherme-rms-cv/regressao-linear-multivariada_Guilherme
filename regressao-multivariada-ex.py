@@ -12,12 +12,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-from RegressionMultivariate.features_normalize import features_normalize_by_std
-from RegressionMultivariate.features_normalize import features_normalizes_by_min_max
-from RegressionMultivariate.compute_cost_multi import compute_cost_multi
-from RegressionMultivariate.gradient_descent_multi import gradient_descent_multi
-from RegressionMultivariate.gradient_descent_multi import gradient_descent_multi_with_history
-from RegressionMultivariate.normal_eqn import normal_eqn
+from regression_multivariate.features_normalize import features_normalize_by_std
+from regression_multivariate.features_normalize import features_normalizes_by_min_max
+from regression_multivariate.compute_cost_multi import compute_cost_multi
+from regression_multivariate.gradient_descent_multi import gradient_descent_multi
+from regression_multivariate.gradient_descent_multi import gradient_descent_multi_with_history
+from regression_multivariate.normal_eqn import normal_eqn
 
 def costs_from_history(X_b: np.ndarray, y: np.ndarray, thetas: np.ndarray) -> np.ndarray:
     """Calcula o custo J(θ) para cada θ em *thetas*."""

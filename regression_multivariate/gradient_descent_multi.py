@@ -9,7 +9,7 @@
 """
 
 import numpy as np
-from RegressionMultivariate.compute_cost_multi import compute_cost_multi
+from regression_multivariate.compute_cost_multi import compute_cost_multi
 
 
 def gradient_descent_multi(X, y, theta, alpha, num_iters):
