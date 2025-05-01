@@ -1,3 +1,9 @@
+## 0.0.5 (2025-05-01)
+
+### Fix
+
+- add values to empty variables
+
 ## 0.0.4 (2025-05-01)
 
 ### Fix
