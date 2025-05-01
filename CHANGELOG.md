@@ -1,3 +1,10 @@
+## 0.0.4 (2025-05-01)
+
+### Fix
+
+- add values to empty variables
+- add values to empty variables
+
 ## 0.0.3 (2025-04-30)
 
 ### Refactor
