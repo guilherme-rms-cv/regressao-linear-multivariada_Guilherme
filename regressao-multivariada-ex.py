@@ -51,22 +51,22 @@ def main():
 
     """
     # 1) Cria pasta de figuras
-    os.makedirs("Figures", exist_ok=True)
+    os.makedirs("figures", exist_ok=True)
 
     # 2) Carrega dados
-    data = np.loadtxt('Data/ex1data2.txt', delimiter=',')
+    data = np.loadtxt('data/ex1data2.txt', delimiter=',')
     # Carregue todas as linhas, mas somente as 2 primeiras colunas para (X)
     # As duas primeiras colunas são as features (tamanho em pés e número de quartos)
     # O vetor X terá dimensão (m, 2), onde m é o número de amostras
-    X = 
+    X = data[:, 0:2]
     # Carregue a terceira coluna como (y) (preço da casa)
     # A terceira coluna é o preço da casa, que é o valor alvo que queremos prever
     # O vetor y terá dimensão (m,), onde m é o número de amostras
-    y = 
+    y = data[:, 2]
     
     # obtenha o número de exemplos de treinamento
     # O número de exemplos de treinamento é o número de linhas em y
-    m = 
+    m = y.shape[0]
 
     print('Primeiros 10 exemplos de treinamento:')
     print(np.column_stack((X[:10], y[:10])))
@@ -85,11 +85,11 @@ def main():
     [1.49400e+03 3.00000e+00 2.42500e+05]]
     """
     # 3) Normaliza features
-    X_norm, mu, sigma = 
+    X_norm, mu, sigma = features_normalize_by_std(X)
     # Agora devemos adicionar uma coluna de 1s para o termo de bias (intercepto) em X usando np.column_stack
     # Adicione uma coluna de 1s para o termo de bias (intercepto) em X usando np.column_stack
     # A função np.column_stack empilha as colunas de X_norm e uma coluna de 1s
-    X_b =   # X para GD
+    X_b = np.column_stack((np.ones((m, 1)), X_norm)) # X para GD
     # imprime os parâmetros de normalização
     print('\nParâmetros de normalização:')
     print(f'Média (mu): {mu}')
@@ -109,12 +109,12 @@ def main():
     # e 1 é para o termo de bias (intercepto)
     # O vetor theta é inicializado com zeros, o que significa que inicialmente não temos informações sobre os parâmetros
     # do modelo
-    theta_gd = 
+    theta_gd = np.zeros(X_b.shape[1])
 
     # Chame a função gradient_descent_multi para calcular os parâmetros θ usando o gradiente descendente
     # A função gradient_descent_multi retorna os parâmetros θ aprendidos e o histórico de custo J_history
     # O vetor J_history armazena o custo em cada iteração do gradiente descendente
-    theta_gd, J_history = gradient_descent_multi(
+    theta_gd, J_history = gradient_descent_multi(X_b, y, theta_gd, alpha, num_iters
     )
     print('\nTheta via Gradient Descent:')
     print(theta_gd)
@@ -127,25 +127,25 @@ def main():
     # 4a) Plot de convergência (GD)
     plt.figure()
     # Coloque o J_history aqui para ser plotado
-    plt.plot(np.arange(1, num_iters + 1), XXXX, 'b-', linewidth=2)
+    plt.plot(np.arange(1, num_iters + 1), J_history, 'b-', linewidth=2)
     plt.xlabel('Iteração')
     plt.ylabel('Custo J(θ)')
     plt.title('Convergência do Gradiente (Multivariada)')
     plt.grid(True)
-    plt.savefig('Figures/convergencia_custo_multi.png', dpi=300, bbox_inches='tight')
-    plt.savefig('Figures/convergencia_custo_multi.svg', format='svg', bbox_inches='tight')
+    plt.savefig('figures/convergencia_custo_multi.png', dpi=300, bbox_inches='tight')
+    plt.savefig('figures/convergencia_custo_multi.svg', format='svg', bbox_inches='tight')
     plt.show()
 
     # 5) Predição com GD
     example = np.array([1650, 3]) # features originais
     # Normalize o novo caso de teste usando os mesmos coeficientes de normalização
     # obtidos no treinamento do modelo
-    example_norm =  # normaliza
+    example_norm = (example - mu) / sigma # normaliza
     x_pred = np.concatenate(([1], example_norm)) # adiciona bias
     # Agora podemos fazer a predição usando o vetor theta_gd
     # A predição é feita multiplicando o vetor x_pred pelo vetor theta_gd
     # A predição é o produto escalar entre o vetor x_pred e o vetor theta_gd
-    price_gd =  # faz a predição
+    price_gd = x_pred @ theta_gd # faz a predição
     print(f'\nPreço previsto (GD) para [1650,3]: ${price_gd:.2f}')
     """
     Resposta esperada:
@@ -157,12 +157,12 @@ def main():
     # Adicione uma coluna de 1s para o termo de bias (intercepto) em X usando np.column_stack
     # A função np.column_stack empilha as colunas de X e uma coluna de 1s
     # Obs. ne de normal equation
-    X_ne =   # X original com bias
+    X_ne = np.column_stack((np.ones((m, 1)), X)) # X original com bias
     # A equação normal é uma solução fechada para o problema de regressão linear
     # que minimiza a soma dos erros quadráticos entre as previsões e os valores reais
     # Chame a função normal_eqn para calcular os parâmetros θ usando a equação normal
     # A função normal_eqn retorna os parâmetros θ calculados pela equação normal
-    theta_ne = 
+    theta_ne = normal_eqn(X_ne, y)
     
     # Agora vamos fazer uma predição com a equação normal
     # O vetor example tem dimensão (n+1,), onde n é o número de features
@@ -173,7 +173,7 @@ def main():
     # A predição é o produto escalar entre o vetor example e o vetor theta_ne
     # O resultado é um escalar que representa o preço previsto
     # Obs. use o @ para multiplicação de matrizes (ou vetores)
-    price_ne =  # faz a predição
+    price_ne = example @ theta_ne # faz a predição
     print('\nTheta via Equação Normal:')
     print(theta_ne)
     print(f'Preço previsto (NE) para [1650,3]: ${price_ne:.2f}')
@@ -212,8 +212,8 @@ def main():
     plt.title('GD vs Normal Equation')
     plt.legend()
     plt.grid(True)
-    plt.savefig('Figures/convergencia_custo_vs_ne.png', dpi=300, bbox_inches='tight')
-    plt.savefig('Figures/convergencia_custo_vs_ne.svg', format='svg', bbox_inches='tight')
+    plt.savefig('figures/convergencia_custo_vs_ne.png', dpi=300, bbox_inches='tight')
+    plt.savefig('figures/convergencia_custo_vs_ne.svg', format='svg', bbox_inches='tight')
     plt.show()
 
     # -------------- Visualizações 3D / Contorno para multivariada ----------------------------
@@ -224,7 +224,9 @@ def main():
     theta_gd, J_history, theta_history = gradient_descent_multi_with_history(
         
     )
-    theta_ne_norm = 
+    theta_ne_norm = np.zeros_like(theta_ne)
+    theta_ne_norm[0] = theta_ne[0] - np.sum((theta_ne[1:] * mu) / sigma)
+    theta_ne_norm[1:] = theta_ne[1:] / sigma 
     # ------------------------------------------------------------------
     # 7) Contorno J(θ1, θ2) (θ0 fixo em θ_gd[0]). Malha de custo centrada no ótimo
     t1_hist, t2_hist = theta_history[:, 1], theta_history[:, 2]
@@ -254,7 +256,7 @@ def main():
     ax.set_title("Superfície J(θ1, θ2)")
     ax.view_init(elev=30, azim=-60)
     ax.legend()
-    fig.savefig("Figures/superficie_GD_vs_NE.png", dpi=300)
+    fig.savefig("figures/superficie_GD_vs_NE.png", dpi=300)
 
     # --------------------------------------------------------------
     # 8a) Contorno J(θ1, θ2) + trajetória GD + NE (normalizado)
@@ -268,7 +270,7 @@ def main():
     plt.scatter(theta_ne_norm[1], theta_ne_norm[2], s=80, marker="x", color="black", label="NE (norm)")
     plt.xlabel(r"$\theta_1$"); plt.ylabel(r"$\theta_2$")
     plt.title("Contorno J(θ1, θ2)"); plt.legend()
-    plt.savefig("Figures/contorno_GD_vs_NE.png", dpi=300)
+    plt.savefig("figures/contorno_GD_vs_NE.png", dpi=300)
     plt.show()
 
     # ------------------------------------------------------------------
@@ -310,7 +312,7 @@ def main():
     ]
     ax2.legend(handles=handles)
     fig2.tight_layout()
-    fig2.savefig("Figures/ajuste_regressao_multivariada.png", dpi=300)
+    fig2.savefig("figures/ajuste_regressao_multivariada.png", dpi=300)
     plt.show()
 
 if __name__ == '__main__':
