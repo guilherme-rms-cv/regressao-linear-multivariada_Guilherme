@@ -1,3 +1,9 @@
+## 0.1.0 (2025-05-04)
+
+### Feat
+
+- add function without normalization
+
 ## 0.0.7 (2025-05-04)
 
 ### Fix

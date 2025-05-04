@@ -85,7 +85,7 @@ def main():
     [1.49400e+03 3.00000e+00 2.42500e+05]]
     """
     # 3) Normaliza features
-    X_norm, mu, sigma = features_normalize_by_std(X)
+    X_norm, mu, sigma = features_normalizes_by_min_max(X)
     # Agora devemos adicionar uma coluna de 1s para o termo de bias (intercepto) em X usando np.column_stack
     # Adicione uma coluna de 1s para o termo de bias (intercepto) em X usando np.column_stack
     # A função np.column_stack empilha as colunas de X_norm e uma coluna de 1s
@@ -134,7 +134,7 @@ def main():
     plt.grid(True)
     plt.savefig('figures/convergencia_custo_multi.png', dpi=300, bbox_inches='tight')
     plt.savefig('figures/convergencia_custo_multi.svg', format='svg', bbox_inches='tight')
-    plt.show()
+    # plt.show()
 
     # 5) Predição com GD
     example = np.array([1650, 3]) # features originais
@@ -214,14 +214,14 @@ def main():
     plt.grid(True)
     plt.savefig('figures/convergencia_custo_vs_ne.png', dpi=300, bbox_inches='tight')
     plt.savefig('figures/convergencia_custo_vs_ne.svg', format='svg', bbox_inches='tight')
-    plt.show()
+    # plt.show()
 
     # -------------- Visualizações 3D / Contorno para multivariada ----------------------------
     # Para visualizar a função de custo J(θ) em 3D ou contorno, precisamos
     # você precisa implementar a função compute_cost_multi_with_history, que calcula o custo
     # e armazena o histórico de parâmetros θ em cada iteração.
     # A função compute_cost_multi_with_history é semelhante à função compute_cost_multi,
-    theta_gd, J_history, theta_history = gradient_descent_multi_with_history(
+    theta_gd, J_history, theta_history = gradient_descent_multi_with_history(X_b, y, np.zeros(X_b.shape[1]), alpha, num_iters
         
     )
     theta_ne_norm = np.zeros_like(theta_ne)
@@ -271,7 +271,7 @@ def main():
     plt.xlabel(r"$\theta_1$"); plt.ylabel(r"$\theta_2$")
     plt.title("Contorno J(θ1, θ2)"); plt.legend()
     plt.savefig("figures/contorno_GD_vs_NE.png", dpi=300)
-    plt.show()
+    # plt.show()
 
     # ------------------------------------------------------------------
     # 9) Plano de regressão ajustado + pontos originais (3‑D) ------------
@@ -313,7 +313,7 @@ def main():
     ax2.legend(handles=handles)
     fig2.tight_layout()
     fig2.savefig("figures/ajuste_regressao_multivariada.png", dpi=300)
-    plt.show()
+    # plt.show()
 
 if __name__ == '__main__':
     main()
