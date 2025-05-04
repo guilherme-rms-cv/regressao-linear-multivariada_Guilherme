@@ -74,3 +74,15 @@ def features_normalizes_by_min_max(X):
     # Normaliza as features
     X_norm = (X - min) / (max - min)
     return X_norm, min, max
+
+def features_without_normalization(X):
+    """
+    Retorna as features originais sem aplicar nenhum tipo de normalização.
+    
+    :param (ndarray) X: Matriz de entrada onde cada linha é uma amostra e cada coluna é uma feature.
+    :return (tuple): Uma tupla contendo:
+        - X_copy (ndarray): Cópia da matriz de entrada sem alterações.
+        - None: Não há vetor de médias/mínimos.
+        - None: Não há vetor de desvios/máximos.
+    """
+    return X.copy(), None, None
